@@ -1,0 +1,73 @@
+<div class="bg-gray-900 text-white min-h-screen">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="text-center max-w-3xl mx-auto">
+      <h2 class="text-4xl md:text-5xl font-bold mb-4">
+        Create with <span class="text-fuchsia-500">Sarah</span>
+      </h2>
+      <p class="text-lg text-gray-400 mb-8">
+        Describe your idea, and our AI design assistant, Sarah, will generate a concept and detailed description for your custom 3D model.
+      </p>
+    </div>
+
+    <div class="max-w-2xl mx-auto">
+      <div class="bg-gray-800 border border-gray-700 rounded-lg p-6 shadow-lg">
+        <div class="flex flex-col sm:flex-row gap-4">
+          <input 
+            #promptInput
+            type="text" 
+            (keyup.enter)="generateConcept(promptInput.value)"
+            class="flex-grow p-4 bg-gray-700 border border-gray-600 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-cyan-500" 
+            placeholder="e.g., a majestic dragon coiled around a glowing crystal">
+          <button 
+            (click)="generateConcept(promptInput.value)" 
+            [disabled]="state().status === 'loading'"
+            class="px-6 py-3 rounded-md border-none cursor-pointer font-medium bg-cyan-500 text-white hover:bg-cyan-600 transition-all duration-300 disabled:bg-gray-600 disabled:cursor-not-allowed flex justify-center items-center">
+            @if (state().status === 'loading') {
+              <i class="fas fa-spinner fa-spin mr-2"></i>
+              <span>Generating...</span>
+            } @else {
+              <span>Generate</span>
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-12 max-w-4xl mx-auto">
+      @switch (state().status) {
+        @case ('loading') {
+          <div class="text-center p-8">
+            <p class="text-lg text-gray-400">Sarah is thinking... Please wait a moment.</p>
+          </div>
+        }
+        @case ('success') {
+          @if(state().result; as result) {
+            <div class="bg-gray-800 border border-gray-700 rounded-lg shadow-lg overflow-hidden animate-fade-in">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+                <div>
+                  <h3 class="text-2xl font-bold mb-4 text-cyan-400">Concept Image</h3>
+                  <img [src]="result.imageUrl" alt="AI generated concept" class="w-full h-auto rounded-lg object-cover shadow-md">
+                </div>
+                <div>
+                  <h3 class="text-2xl font-bold mb-4 text-cyan-400">Sarah's Description</h3>
+                  <p class="text-gray-300 whitespace-pre-wrap">{{ result.description }}</p>
+                </div>
+              </div>
+              <div class="bg-gray-800/50 p-6 text-center">
+                 <button (click)="requestQuote(result.description)" class="px-8 py-3 rounded-md border-none cursor-pointer font-medium bg-fuchsia-600 text-white hover:bg-fuchsia-700 transition-all duration-300">
+                  Love it? Request a Quote!
+                </button>
+              </div>
+            </div>
+          }
+        }
+        @case ('error') {
+          <div class="bg-red-900/50 border border-red-500 text-red-300 p-6 rounded-lg text-center">
+            <h3 class="text-xl font-semibold mb-2">An Error Occurred</h3>
+            <p>{{ state().error }}</p>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>

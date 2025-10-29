@@ -1,0 +1,39 @@
+@if (isOpen()) {
+  <div class="fixed inset-0 bg-black bg-opacity-70 z-[2000] flex justify-center items-center p-4">
+    <div class="bg-gray-800 border border-gray-700 p-8 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-lg text-white">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-2xl font-semibold text-white">Your Cart</h3>
+        <button class="bg-transparent border-none text-2xl cursor-pointer text-gray-400 hover:text-white" (click)="onClose()">&times;</button>
+      </div>
+
+      @if (cartItems().length === 0) {
+        <p class="text-center text-gray-400 mt-4" id="emptyCartMessage">Your cart is empty</p>
+      } @else {
+        <div id="cartItems">
+          @for (item of cartItems(); track item.id) {
+            <div class="flex items-center mb-4 pb-4 border-b border-gray-700">
+              <img [ngSrc]="item.image" alt="{{ item.name }}" class="w-16 h-16 object-cover rounded-md mr-4" width="64" height="64">
+              <div class="flex-1">
+                <h4 class="m-0 text-base font-medium text-white">{{ item.name }}</h4>
+                <p class="m-0 text-gray-400">Rs. {{ item.price | number }}</p>
+              </div>
+              <div class="flex items-center">
+                <button class="px-2 py-1 rounded-md border border-gray-600 text-gray-300 hover:bg-gray-700 transition-colors duration-200" (click)="onUpdateQuantity(item.id, -1)">-</button>
+                <span class="mx-3 font-semibold">{{ item.quantity }}</span>
+                <button class="px-2 py-1 rounded-md border border-gray-600 text-gray-300 hover:bg-gray-700 transition-colors duration-200" (click)="onUpdateQuantity(item.id, 1)">+</button>
+                <button class="ml-4 px-2 py-1 rounded-md border border-red-500/50 text-red-500 hover:bg-red-500/10 transition-colors duration-200" (click)="onRemoveItem(item.id)">Remove</button>
+              </div>
+            </div>
+          }
+        </div>
+        <div class="mt-6" id="cartTotal">
+          <div class="flex justify-between font-bold mb-4 text-lg">
+            <span>Total:</span>
+            <span id="totalAmount">Rs. {{ cartTotal() | number }}</span>
+          </div>
+          <button class="w-full px-4 py-3 rounded-md border-none cursor-pointer font-medium bg-cyan-500 text-white hover:bg-cyan-600 transition-all duration-300" (click)="onProceedToCheckout()">Proceed to Checkout</button>
+        </div>
+      }
+    </div>
+  </div>
+}

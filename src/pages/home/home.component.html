@@ -1,0 +1,56 @@
+<!-- Hero Section -->
+<section class="relative bg-gray-900 text-white text-center py-20 sm:py-32 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-fuchsia-900/30 to-cyan-900/30"></div>
+  <div class="absolute top-0 left-0 w-full h-full bg-grid-pattern opacity-10"></div>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <h2 class="text-4xl md:text-6xl font-bold mb-5 leading-tight">Your Vision, Materialized</h2>
+    <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8 text-gray-300">AI-powered design and precision 3D printing for creators and innovators. Let's build the impossible.</p>
+    <div class="flex flex-col sm:flex-row justify-center gap-4">
+      <a routerLink="/gallery" class="px-8 py-3 rounded-md border-none cursor-pointer font-medium bg-cyan-500 text-white hover:bg-cyan-600 transition-all duration-300">Explore Gallery</a>
+      <a routerLink="/ai-customizer" class="px-8 py-3 rounded-md border border-white bg-transparent text-white hover:bg-white hover:text-gray-900 transition-all duration-300">Create with AI</a>
+    </div>
+  </div>
+</section>
+
+<!-- AI Feature Intro -->
+<section class="py-16 bg-gray-900 text-white">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap-reverse items-center gap-10">
+    <div class="flex-1 min-w-[300px] text-center">
+      <img ngSrc="https://i.pinimg.com/originals/e7/6c/c7/e76cc7d2bd9c7cfb8abe2c5d1076295f.jpg" alt="AI Customization Example" class="max-w-full rounded-lg shadow-2xl shadow-fuchsia-500/20" width="500" height="500" priority>
+    </div>
+    <div class="flex-1 min-w-[300px]">
+      <h3 class="text-3xl md:text-4xl font-bold mb-5 text-white">Meet <span class="text-fuchsia-500">Sarah</span>, Your AI Design Partner</h3>
+      <p class="mb-5 text-gray-400">Have a unique idea but not the 3D model? Describe your concept to Sarah. She'll help you visualize and detail your project, generating concept art and a comprehensive brief for our printers.</p>
+      <ul class="text-gray-300 space-y-3 mb-8">
+        <li class="flex items-center"><i class="fas fa-check-circle text-cyan-400 mr-3"></i> Turn simple text into detailed design concepts.</li>
+        <li class="flex items-center"><i class="fas fa-check-circle text-cyan-400 mr-3"></i> Generate stunning concept images instantly.</li>
+        <li class="flex items-center"><i class="fas fa-check-circle text-cyan-400 mr-3"></i> Streamline the path from idea to physical object.</li>
+      </ul>
+      <a routerLink="/ai-customizer" class="px-8 py-3 rounded-md border-none cursor-pointer font-medium bg-fuchsia-600 text-white hover:bg-fuchsia-700 transition-all duration-300">Start Creating Now</a>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products Section -->
+<section id="products" class="py-16 bg-gray-900">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-center text-3xl md:text-4xl font-bold text-white my-10">Featured Creations</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+      @for (product of featuredProducts(); track product.id) {
+        <app-product-card [product]="product" (addToCartEvent)="onAddToCart($event)" />
+      }
+    </div>
+    <div class="text-center">
+      <a routerLink="/gallery" class="px-8 py-3 rounded-md border border-cyan-500 text-cyan-500 hover:bg-cyan-500 hover:text-white transition-all duration-300">View All Products</a>
+    </div>
+  </div>
+</section>
+
+<style>
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+}
+</style>

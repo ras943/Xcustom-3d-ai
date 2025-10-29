@@ -1,0 +1,60 @@
+@if (isOpen()) {
+  <div class="fixed inset-0 bg-black bg-opacity-70 z-[2000] flex justify-center items-center p-4">
+    <div class="bg-gray-800 border border-gray-700 p-8 rounded-lg w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-lg text-white">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-2xl font-semibold text-white">Start Custom Order</h3>
+        <button class="bg-transparent border-none text-2xl cursor-pointer text-gray-400 hover:text-white" (click)="onClose()">&times;</button>
+      </div>
+      <form [formGroup]="customOrderForm" (ngSubmit)="onSubmit()">
+        <div class="mb-5">
+          <label for="name" class="block mb-2 font-medium text-gray-300">Full Name</label>
+          <input type="text" id="name" formControlName="name" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-cyan-500" required>
+          @if (customOrderForm.get('name')?.invalid && (customOrderForm.get('name')?.dirty || customOrderForm.get('name')?.touched)) {
+            <p class="text-red-400 text-sm mt-1">Name is required.</p>
+          }
+        </div>
+        <div class="mb-5">
+          <label for="email" class="block mb-2 font-medium text-gray-300">Email Address</label>
+          <input type="email" id="email" formControlName="email" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-cyan-500" required>
+          @if (customOrderForm.get('email')?.invalid && (customOrderForm.get('email')?.dirty || customOrderForm.get('email')?.touched)) {
+            @if (customOrderForm.get('email')?.errors?.['required']) {
+              <p class="text-red-400 text-sm mt-1">Email is required.</p>
+            }
+            @if (customOrderForm.get('email')?.errors?.['email']) {
+              <p class="text-red-400 text-sm mt-1">Please enter a valid email.</p>
+            }
+          }
+        </div>
+        <div class="mb-5">
+          <label for="phone" class="block mb-2 font-medium text-gray-300">Phone Number</label>
+          <input type="tel" id="phone" formControlName="phone" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-cyan-500" required>
+          @if (customOrderForm.get('phone')?.invalid && (customOrderForm.get('phone')?.dirty || customOrderForm.get('phone')?.touched)) {
+            <p class="text-red-400 text-sm mt-1">Phone number is required.</p>
+          }
+        </div>
+        <div class="mb-5">
+          <label for="projectDescription" class="block mb-2 font-medium text-gray-300">Project Description</label>
+          <textarea id="projectDescription" formControlName="projectDescription" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-md text-base min-h-32 resize-y focus:outline-none focus:ring-2 focus:ring-cyan-500" placeholder="Describe your project in detail..." required></textarea>
+          @if (customOrderForm.get('projectDescription')?.invalid && (customOrderForm.get('projectDescription')?.dirty || customOrderForm.get('projectDescription')?.touched)) {
+            <p class="text-red-400 text-sm mt-1">Project description is required.</p>
+          }
+        </div>
+        <div class="mb-5">
+          <label class="block mb-2 font-medium text-gray-300">Upload Design Files (Optional)</label>
+          <div class="border-2 border-dashed border-gray-600 p-6 text-center rounded-md cursor-pointer hover:border-cyan-500 transition-colors duration-300" (click)="designFilesInput.click()">
+            @if (fileName()) {
+              <i class="fas fa-check-circle text-emerald-500 text-4xl mb-3"></i>
+              <p class="text-gray-300">{{ fileName() }} selected</p>
+            } @else {
+              <i class="fas fa-file-upload text-gray-400 text-4xl mb-3"></i>
+              <p class="text-gray-300">Click to upload or drag and drop</p>
+              <p class="text-sm text-gray-500">STL, OBJ, 3MF files (Max 25MB)</p>
+            }
+            <input type="file" id="designFiles" #designFilesInput class="hidden" accept=".stl,.obj,.3mf" (change)="onFileSelected($event)">
+          </div>
+        </div>
+        <button type="submit" class="w-full px-4 py-3 rounded-md border-none cursor-pointer font-medium bg-cyan-500 text-white hover:bg-cyan-600 transition-all duration-300">Submit Order Request</button>
+      </form>
+    </div>
+  </div>
+}
