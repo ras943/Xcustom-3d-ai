@@ -61,4 +61,68 @@ export class GenAIService {
       },
     });
   }
+
+  async findNearbyPrintingHubs(location: string): Promise<{ text: string, sources: any[] }> {
+    try {
+      const response = await this.ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: `Find the top 3D printing services near ${location}. Provide their name, a brief description, and if possible, their address.`,
+        config: {
+          tools: [{googleSearch: {}}],
+        },
+      });
+
+      const groundingMetadata = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
+      return {
+          text: response.text,
+          sources: groundingMetadata
+      };
+    } catch (error) {
+      console.error("Error with Google Search grounding:", error);
+      throw new Error("Failed to find nearby hubs. The service may be unavailable.");
+    }
+  }
+
+  async generateOrderStatusUpdate(productName: string, currentStatus: string): Promise<string> {
+    try {
+        const prompt = `You are Sarah, the friendly and enthusiastic AI assistant for XUSTOM 3D. A customer's order for a "${productName}" is currently at the "${currentStatus}" stage. Write a short (1-2 sentences), creative, and exciting status update for them. Make it sound like a special process is happening.`;
+        const response = await this.ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: prompt,
+            config: {
+              temperature: 0.9,
+              thinkingConfig: { thinkingBudget: 0 } // For fast, creative response
+            }
+        });
+        return response.text;
+    } catch (error) {
+        console.error("Error generating status update:", error);
+        return "Your order is being processed with care.";
+    }
+  }
+
+  async generateProductDescription(productName: string, shortDescription: string): Promise<string> {
+    try {
+        const prompt = `You are a creative marketing expert for XUSTOM 3D, a cutting-edge 3D printing company.
+        A customer is viewing a product named "${productName}".
+        The product's brief description is: "${shortDescription}".
+
+        Your task is to write a compelling, detailed, and engaging product description (around 3-4 paragraphs) that will be displayed on the product detail page.
+        Highlight its unique design, potential uses, the quality of the 3D printing process, and why it's a must-have item.
+        Use an enthusiastic and professional tone. Do not use markdown.`;
+
+        const response = await this.ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: prompt,
+            config: {
+              temperature: 0.7,
+            }
+        });
+        return response.text;
+    } catch (error) {
+        console.error("Error generating product description:", error);
+        // Return a default descriptive text on error
+        return "Discover the unique design and exceptional quality of this 3D printed creation. Perfect for adding a modern touch to your space, this item is crafted with precision and care to bring innovative ideas to life.";
+    }
+  }
 }

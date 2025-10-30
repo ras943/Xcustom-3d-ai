@@ -1,0 +1,27 @@
+<div>
+  @if (reviews().length === 0) {
+    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 text-center">
+        <p class="text-gray-400 italic">No reviews yet. Be the first to leave one!</p>
+    </div>
+  } @else {
+    <div class="space-y-6">
+      @for (review of reviews(); track review.date) {
+        <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+          <div class="flex justify-between items-center mb-2">
+            <h5 class="font-semibold text-white">{{ review.author }}</h5>
+            <span class="text-sm text-gray-400">{{ review.date | date: 'mediumDate' }}</span>
+          </div>
+          <div class="flex items-center space-x-1 mb-2 text-amber-400">
+            @for (star of stars; track star) {
+              <i 
+                class="fas fa-star"
+                [class.text-amber-400]="review.rating >= star"
+                [class.text-gray-600]="review.rating < star"></i>
+            }
+          </div>
+          <p class="text-gray-300 whitespace-pre-wrap">{{ review.text }}</p>
+        </div>
+      }
+    </div>
+  }
+</div>

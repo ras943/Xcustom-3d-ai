@@ -1,0 +1,24 @@
+<section class="bg-gray-900 text-white py-16">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+        <h2 class="text-4xl md:text-5xl font-bold">Our Autonomous AI Workflow</h2>
+        <p class="text-lg text-gray-400 mt-4 max-w-3xl mx-auto">From concept to creation, your vision is managed by a dedicated team of specialized AIs, ensuring speed, precision, and quality at every step.</p>
+    </div>
+
+    <div class="relative max-w-5xl mx-auto">
+      <!-- Dotted line connector for larger screens -->
+      <div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gray-700 border-t-2 border-dashed border-gray-600 -translate-y-1/2"></div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+        @for(agent of aiTeam(); track agent.name) {
+          <div class="bg-gray-800 p-8 rounded-lg text-center shadow-lg hover:shadow-cyan-500/20 transform hover:-translate-y-2 transition-all duration-300 border border-gray-700 flex flex-col items-center">
+            <div class="text-6xl mb-4" [class]="agent.color"><i class="fas" [class]="agent.icon"></i></div>
+            <h3 class="text-xl font-semibold mb-2 text-white">{{ agent.name }}</h3>
+            <p class="text-sm font-bold mb-4" [class]="agent.color">{{ agent.role }}</p>
+            <p class="text-gray-400 text-sm flex-grow">{{ agent.description }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>

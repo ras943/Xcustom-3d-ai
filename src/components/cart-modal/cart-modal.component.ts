@@ -1,6 +1,7 @@
 
-import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { Router } from '@angular/router';
 import { CartItem } from '../../services/cart.service';
 
 @Component({
@@ -19,6 +20,8 @@ export class CartModalComponent {
   updateQuantity = output<{ productId: number; change: number }>();
   removeItem = output<number>();
 
+  private router = inject(Router);
+
   onClose(): void {
     this.closeModal.emit();
   }
@@ -32,8 +35,7 @@ export class CartModalComponent {
   }
 
   onProceedToCheckout(): void {
-    alert('Proceeding to checkout! (This is a placeholder action)');
-    // Implement actual checkout logic here
+    this.router.navigate(['/checkout']);
     this.onClose(); // Close modal after action
   }
 }

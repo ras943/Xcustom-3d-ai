@@ -1,6 +1,8 @@
 
-import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+
+import { Component, input, output, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
+import { Router } from '@angular/router';
 import { CartItem } from '../../services/cart.service';
 
 interface Product {
@@ -21,6 +23,7 @@ interface Product {
 export class ProductCardComponent {
   product = input.required<Product>();
   addToCartEvent = output<Omit<CartItem, 'quantity'>>();
+  private router = inject(Router);
 
   onAddToCart(): void {
     const productData = this.product();
@@ -34,9 +37,7 @@ export class ProductCardComponent {
     });
   }
 
-  // Not implemented in original, but good to have for future
   onViewDetails(): void {
-    console.log('View details for:', this.product().name);
-    // Potentially navigate to a product detail page
+    this.router.navigate(['/product', this.product().id]);
   }
 }

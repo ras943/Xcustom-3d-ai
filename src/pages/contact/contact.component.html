@@ -36,5 +36,70 @@
             </form>
         </div>
     </div>
+    
+    <!-- Find a Local Hub Section -->
+    <div class="mt-20 pt-12 border-t border-gray-800">
+       <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold">Find a Local Printing Hub</h2>
+        <p class="text-lg text-gray-400 mt-4">Get up-to-date information on 3D printing services near you, powered by Google Search.</p>
+      </div>
+      <div class="max-w-2xl mx-auto">
+        <div class="bg-gray-800 border border-gray-700 rounded-lg p-6 shadow-lg">
+          <div class="flex flex-col sm:flex-row gap-4">
+            <input 
+              #locationInput
+              type="text" 
+              (keyup.enter)="findHubs(locationInput.value)"
+              class="flex-grow p-4 bg-gray-700 border border-gray-600 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-cyan-500" 
+              placeholder="e.g., Lahore, Pakistan">
+            <button 
+              (click)="findHubs(locationInput.value)" 
+              [disabled]="state().status === 'loading'"
+              class="px-6 py-3 rounded-md border-none cursor-pointer font-medium bg-cyan-500 text-white hover:bg-cyan-600 transition-all duration-300 disabled:bg-gray-600 disabled:cursor-not-allowed flex justify-center items-center">
+              @if (state().status === 'loading') {
+                <i class="fas fa-spinner fa-spin mr-2"></i>
+                <span>Searching...</span>
+              } @else {
+                 <i class="fas fa-search mr-2"></i>
+                <span>Find Hubs</span>
+              }
+            </button>
+          </div>
+        </div>
+
+        <div class="mt-8">
+          @switch (state().status) {
+            @case ('loading') {
+              <p class="text-center text-gray-400">Searching for hubs...</p>
+            }
+            @case ('success') {
+              @if (state().result; as result) {
+                <div class="bg-gray-800 border border-gray-700 rounded-lg p-6">
+                  <h4 class="text-xl font-semibold mb-4 text-cyan-400">Search Results</h4>
+                  <p class="text-gray-300 whitespace-pre-wrap mb-6">{{ result.text }}</p>
+                  @if (result.sources.length > 0) {
+                    <h5 class="font-semibold text-gray-400 mb-2">Sources:</h5>
+                    <ul class="list-disc list-inside text-sm space-y-1">
+                      @for (source of result.sources; track $index) {
+                        <li>
+                          <a [href]="source.web?.uri" target="_blank" rel="noopener noreferrer" class="text-cyan-500 hover:underline">
+                            {{ source.web?.title || source.web?.uri }}
+                          </a>
+                        </li>
+                      }
+                    </ul>
+                  }
+                </div>
+              }
+            }
+            @case ('error') {
+              <div class="bg-red-900/50 border border-red-500 text-red-300 p-4 rounded-lg text-center">
+                <p>{{ state().error }}</p>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
   </div>
 </section>

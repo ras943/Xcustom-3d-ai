@@ -1,0 +1,81 @@
+<div class="bg-gray-900 text-white min-h-screen py-16">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    @if (order(); as currentOrder) {
+      <div class="bg-gray-800 p-8 rounded-lg border border-gray-700">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-gray-700 pb-6">
+          <div>
+            <h2 class="text-3xl md:text-4xl font-bold">Order Tracking</h2>
+            <p class="text-cyan-400 font-mono">ID: {{ currentOrder.id }}</p>
+          </div>
+          <a routerLink="/gallery" class="mt-4 sm:mt-0 px-6 py-2 rounded-md border border-cyan-500 text-cyan-500 hover:bg-cyan-500 hover:text-white transition-all duration-300">Continue Shopping</a>
+        </div>
+
+        <!-- AI Status Update -->
+        <div class="bg-gray-900/50 p-6 rounded-lg mb-8 border border-fuchsia-500/30">
+          <h3 class="text-xl font-semibold mb-4 text-fuchsia-400 flex items-center">
+            <i class="fas fa-robot mr-3"></i>
+            A Message from Sarah
+          </h3>
+          @switch (aiUpdateState().status) {
+            @case ('loading') {
+              <p class="text-gray-400 italic">Sarah is checking on your order...</p>
+            }
+            @case ('success') {
+              <p class="text-gray-300">{{ aiUpdateState().message }}</p>
+            }
+            @case ('error') {
+               <p class="text-red-400">{{ aiUpdateState().error }}</p>
+            }
+          }
+        </div>
+
+        <!-- Status Timeline -->
+        <div class="my-8">
+          <div class="flex justify-between items-center">
+            @for (status of allStatuses; track status; let i = $index) {
+              <div class="step-item flex-1 text-center" [class.completed]="isStatusCompleted(status)" [class.active]="isStatusActive(status)">
+                <div class="relative mb-2">
+                  <div class="step-circle w-8 h-8 mx-auto bg-gray-700 border-2 border-gray-600 rounded-full flex items-center justify-center transition-all duration-300">
+                    @if (isStatusCompleted(status)) {
+                      <i class="fas fa-check text-white"></i>
+                    }
+                  </div>
+                  @if (i < allStatuses.length - 1) {
+                    <div class="step-line absolute top-1/2 left-1/2 w-full h-0.5 bg-gray-600 -translate-y-1/2 z-[-1] transition-all duration-300"></div>
+                  }
+                </div>
+                <div class="text-xs text-gray-400">{{ status }}</div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Order Details -->
+        <div>
+          <h3 class="text-2xl font-semibold mt-10 mb-6 text-cyan-400">Order Summary</h3>
+           @for (item of currentOrder.items; track item.id) {
+            <div class="flex items-center mb-4 pb-4 border-b border-gray-700">
+              <img [ngSrc]="item.image" [alt]="item.name" class="w-16 h-16 object-cover rounded-md mr-4" width="64" height="64">
+              <div class="flex-1">
+                <h4 class="m-0 text-base font-medium text-white">{{ item.name }}</h4>
+                <p class="m-0 text-gray-400">Qty: {{ item.quantity }}</p>
+              </div>
+              <div class="text-lg font-semibold">
+                Rs. {{ item.price * item.quantity | number }}
+              </div>
+            </div>
+          }
+          <div class="text-right mt-4 font-bold text-xl">
+            Total: <span class="text-cyan-400">Rs. {{ currentOrder.total | number }}</span>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="text-center bg-gray-800 p-12 rounded-lg border border-gray-700">
+        <h3 class="text-2xl font-semibold mb-4">Order Not Found</h3>
+        <p class="text-gray-400 mb-6">We couldn't find an order with this ID. Please check the ID and try again.</p>
+        <a routerLink="/" class="px-8 py-3 rounded-md border-none cursor-pointer font-medium bg-fuchsia-600 text-white hover:bg-fuchsia-700 transition-all duration-300">Back to Home</a>
+      </div>
+    }
+  </div>
+</div>
