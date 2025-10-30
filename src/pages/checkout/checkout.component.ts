@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { CartService } from '../../services/cart.service';
 import { OrderService } from '../../services/order.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-checkout',
@@ -17,6 +18,7 @@ export class CheckoutComponent {
   private orderService = inject(OrderService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
+  private toastService = inject(ToastService);
 
   selectedPaymentMethod = signal('Card'); // Default payment method
 
@@ -40,7 +42,7 @@ export class CheckoutComponent {
     }
     
     if (this.cartService.cartItems().length === 0) {
-        alert("Your cart is empty!");
+        this.toastService.show("Your cart is empty!", 'error');
         this.router.navigate(['/gallery']);
         return;
     }

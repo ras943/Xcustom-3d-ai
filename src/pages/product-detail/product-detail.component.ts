@@ -1,5 +1,6 @@
 
 
+
 import { Component, ChangeDetectionStrategy, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -10,6 +11,7 @@ import { GenAIService } from '../../services/genai.service';
 import { Review, ReviewService } from '../../services/review.service';
 import { ReviewFormComponent } from '../../components/review-form/review-form.component';
 import { ReviewListComponent } from '../../components/review-list/review-list.component';
+import { ToastService } from '../../services/toast.service';
 
 type AiDescriptionState = 
   | { status: 'loading' }
@@ -36,6 +38,7 @@ export class ProductDetailComponent implements OnInit {
   private cartService = inject(CartService);
   private genAIService = inject(GenAIService);
   private reviewService = inject(ReviewService);
+  private toastService = inject(ToastService);
 
   product = signal<Product | undefined>(undefined);
   aiDescriptionState = signal<AiDescriptionState>({ status: 'loading' });
@@ -106,13 +109,13 @@ export class ProductDetailComponent implements OnInit {
             image: p.image
         };
         this.cartService.addToCart(cartItem);
-        alert(`${p.name} added to cart!`);
+        this.toastService.show(`${p.name} added to cart!`, 'success');
     }
   }
   
   handleRelatedAddToCart(product: Omit<CartItem, 'quantity'>): void {
     this.cartService.addToCart(product);
-    alert(`${product.name} added to cart!`);
+    this.toastService.show(`${product.name} added to cart!`, 'success');
   }
 
   onReviewSubmit(reviewData: { rating: number; text: string }): void {

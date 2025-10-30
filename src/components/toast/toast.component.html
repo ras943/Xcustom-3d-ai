@@ -1,0 +1,34 @@
+<div class="fixed top-20 right-4 z-[3000] space-y-3">
+  @for (toast of toastService.toasts(); track toast.id) {
+    <div 
+      class="toast-enter flex items-start p-4 w-full max-w-xs text-white rounded-lg shadow-lg"
+      [class.bg-emerald-500]="toast.type === 'success'"
+      [class.bg-red-500]="toast.type === 'error'"
+      [class.bg-cyan-500]="toast.type === 'info'"
+      role="alert">
+      <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg"
+        [class.bg-emerald-800]="toast.type === 'success'"
+        [class.bg-red-800]="toast.type === 'error'"
+        [class.bg-cyan-800]="toast.type === 'info'">
+        @if (toast.type === 'success') {
+          <i class="fas fa-check"></i>
+        }
+        @if (toast.type === 'error') {
+          <i class="fas fa-exclamation-triangle"></i>
+        }
+        @if (toast.type === 'info') {
+          <i class="fas fa-info-circle"></i>
+        }
+      </div>
+      <div class="ms-3 text-sm font-normal">{{ toast.message }}</div>
+      <button 
+        type="button" 
+        class="ms-auto -mx-1.5 -my-1.5 bg-white/20 text-white hover:text-white-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-white/30 inline-flex items-center justify-center h-8 w-8" 
+        (click)="toastService.remove(toast.id)" 
+        aria-label="Close">
+        <span class="sr-only">Close</span>
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  }
+</div>

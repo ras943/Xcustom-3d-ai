@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
 import { ProductService } from '../../services/product.service';
 import { CartService, CartItem } from '../../services/cart.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-gallery',
@@ -14,12 +15,12 @@ import { CartService, CartItem } from '../../services/cart.service';
 export class GalleryComponent {
   private productService = inject(ProductService);
   private cartService = inject(CartService);
+  private toastService = inject(ToastService);
 
   products = this.productService.products;
 
   onAddToCart(product: Omit<CartItem, 'quantity'>): void {
     this.cartService.addToCart(product);
-    // You could implement a more subtle notification here
-    alert(`${product.name} added to cart!`);
+    this.toastService.show(`${product.name} added to cart!`, 'success');
   }
 }

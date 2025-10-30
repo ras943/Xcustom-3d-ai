@@ -1,9 +1,11 @@
-import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CustomOrderModalComponent } from './components/custom-order-modal/custom-order-modal.component';
 import { CartModalComponent } from './components/cart-modal/cart-modal.component';
 import { CartService, CartItem } from './services/cart.service';
+import { ToastComponent } from './components/toast/toast.component';
+import { ToastService } from './services/toast.service';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +17,7 @@ import { CartService, CartItem } from './services/cart.service';
     RouterLinkActive,
     CustomOrderModalComponent,
     CartModalComponent,
+    ToastComponent,
   ],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,12 +27,8 @@ export class AppComponent {
   isCartModalOpen = signal(false);
   customOrderDescription = signal<string | null>(null);
 
-  constructor(public cartService: CartService) {}
-
-  onAddToCart(product: Omit<CartItem, 'quantity'>): void {
-    this.cartService.addToCart(product);
-    // Consider a less intrusive notification like a toast message
-  }
+  cartService = inject(CartService);
+  private toastService = inject(ToastService);
 
   openCustomOrderModal(description: string | null = null): void {
     this.customOrderDescription.set(description);
@@ -43,7 +42,7 @@ export class AppComponent {
 
   handleCustomOrderSubmit(formData: any): void {
     console.log('Custom order submitted:', formData);
-    alert('Thank you for your custom order request! We will contact you shortly with a quote.');
+    this.toastService.show('Thank you for your custom order request! We will contact you shortly.', 'success', 5000);
     this.closeCustomOrderModal();
   }
 
