@@ -26,7 +26,13 @@
                 <p class="text-gray-300 whitespace-pre-wrap">{{ aiDescriptionState().description }}</p>
               }
               @case('error') {
-                <!-- Fallback to original short description on error -->
+                <!-- Fallback to original short description on error with a message -->
+                <div class="p-3 mb-3 bg-amber-900/40 border border-amber-500/50 rounded-lg">
+                  <div class="flex items-center text-amber-400">
+                    <i class="fas fa-exclamation-triangle mr-3"></i>
+                    <p class="text-sm">Sarah couldn't generate a detailed description at the moment. Displaying a brief overview instead.</p>
+                  </div>
+                </div>
                 <p class="text-gray-400">{{ p.description }}</p>
               }
             }

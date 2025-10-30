@@ -15,16 +15,19 @@ export class GenAIService {
 
   async generateDesignConcept(prompt: string): Promise<{ description: string; imageUrl: string }> {
     try {
-      // Parallel requests for text and image generation
-      const [textResponsePromise, imageResponsePromise] = [
+      // Run requests for text and image generation in parallel for better performance
+      const [textResponse, imageResponse] = await Promise.all([
         this.generateText(prompt),
         this.generateImage(prompt)
-      ];
-
-      const textResponse = await textResponsePromise;
-      const imageResponse = await imageResponsePromise;
+      ]);
       
       const description = textResponse.text;
+
+      // Defensively check if the image generation was successful and returned images
+      if (!imageResponse.generatedImages || imageResponse.generatedImages.length === 0) {
+        throw new Error("The AI failed to generate an image for this concept.");
+      }
+      
       const base64ImageBytes: string = imageResponse.generatedImages[0].image.imageBytes;
       const imageUrl = `data:image/jpeg;base64,${base64ImageBytes}`;
 
@@ -32,7 +35,11 @@ export class GenAIService {
 
     } catch (error) {
       console.error("Error generating design concept:", error);
-      throw new Error("Failed to generate design concept. Please try again.");
+      // Propagate a more informative error message to the UI
+      if (error instanceof Error) {
+        throw new Error(`Failed to generate design concept: ${error.message}`);
+      }
+      throw new Error("Failed to generate design concept due to an unknown error. Please try again.");
     }
   }
 
